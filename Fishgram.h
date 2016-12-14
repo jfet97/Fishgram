@@ -1,5 +1,5 @@
 /*
-  Fishgram.h - This library allows you to manage your Fishino card using Telegram.
+  Fishgram.h - Library for using Telegram with Fishino.
   Created by Andrea S. Costa, December 9, 2016.
 */
 #ifndef Fishgram_h
@@ -12,7 +12,7 @@
 #include "String.h"
 
 #define HOST "api.telegram.org"
-#define PORT 443
+#define SSL_PORT 443
 
 struct oldestMessage{
   String text;
