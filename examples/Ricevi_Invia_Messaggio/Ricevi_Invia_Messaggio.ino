@@ -109,7 +109,7 @@ void timeEsp ()
 {
   tempoCorrente = millis();
 
-  //Se son passati 50 gg e millis va in overflow, millis riparte da 0.
+  //Se sono passati 50 gg e millis va in overflow, millis riparte da 0.
   //Perciò tempoCorrente diventerebbe < di tempoPrecedente
   //Lo resetto a 0
   if ((tempoPrecedente - tempoCorrente) < 0)
