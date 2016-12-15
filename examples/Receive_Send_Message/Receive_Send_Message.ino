@@ -156,7 +156,7 @@ void loop()
   // isEmpty is a boolean variable that is true if the json message was an empty or wrong string, false otherwise
   // sender_id is a string with sender's id
   // chat_id is a string with chat's id
-  // Text is a string containing the received text. WARNING! In the text there are "". (To consider for a strings comparison)
+  // text is a string containing the received text. WARNING! In the text there are "". (To consider for a strings comparison)
   oldestMessage receivedMessage  = bot.getOldestMessage();
 
   //store sender's id in a unsigned long variable
