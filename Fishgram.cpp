@@ -167,7 +167,6 @@ void Fishgram::sendMessage(const char* answerMessage, String receiver_id)
   while (client->available())
   {
     char kkk = client->read();
-    Serial.print(kkk);
   }
   
   client->stop();
@@ -196,7 +195,6 @@ void Fishgram::sendMessage(String &answerMessage, String receiver_id)
   while (client->available())
   {
     char kkk = client->read();
-    Serial.print(kkk);
   }
   client->stop();
 }
