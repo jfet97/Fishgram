@@ -99,11 +99,11 @@ void resetSetESP()
 
 
 //-------------------------------------------------------------------------------------------------------------------------
-//Void esterna (ogni dieci mins reset ESP)
+//Void esterna (ogni tot reset ESP)
 
 unsigned long tempoCorrente;
 unsigned long tempoPrecedente = 0;
-unsigned long intervallo = 600000;  //Modificare questo valore per modificare l'intervallo di tempo tra due reset
+unsigned long intervallo = 3600000;  //Modificare questo valore per modificare l'intervallo di tempo tra due reset
 
 void timeEsp ()
 {
@@ -117,10 +117,10 @@ void timeEsp ()
     tempoPrecedente = 0;
   }
 
-  //Controllo se sono passati dieci minuti dall'ultimo riavvio
+  //Controllo se è passato tot dall'ultimo riavvio
   if (tempoCorrente - tempoPrecedente >= intervallo)
   {
-    Serial << F("10 minuti trascorsi\r\n");
+    Serial << F("tot minuti trascorsi\r\n");
     tempoPrecedente = tempoCorrente;
     //prima di resettarmi chiudo la connessione con Telegram per sicurezza
     bot.closeConnection();
@@ -152,20 +152,21 @@ void setup()
 //-------------------------------------------------------------------------------------------------------------------------
 //Void loop
 
+//Creo una struttura oldestMessage per salvarci i dati che ricevo tramite il metodo getOldestMessage:
+//isEmpty è una variabile bool che è true se il messaggio json era una stringa vuota o non valida, altrimenti è false
+//sender_id è una stringa con l'id del mittente del messaggio
+//chat_id è una stringa con l'id della chat dalla quale è partito il messaggio verso il bot.
+//text è una stringa contenente il testo ricevuto. ATTENZIONE! Nel testo sono presenti le " iniziali e le " finali. (da tenere presente in un eventuale comparazione di stringhe)
+oldestMessage messaggioRicevuto;
+
 void loop()
 {
-  //Evitare richieste https troppo frequenti
-  delay(2000);
-
-  //controllo se sono passati due minuti dall'ultimo riavvio dell'ESP
+   
+  //controllo se sono passati tot minuti dall'ultimo riavvio dell'ESP
   timeEsp();
 
-  //Creo una struttura oldestMessage per salvarci i dati che ricevo tramite il metodo getOldestMessage:
-  //isEmpty è una variabile bool che è true se il messaggio json era una stringa vuota o non valida, altrimenti è false
-  //sender_id è una stringa con l'id del mittente del messaggio
-  //chat_id è una stringa con l'id della chat dalla quale è partito il messaggio verso il bot.
-  //text è una stringa contenente il testo ricevuto. ATTENZIONE! Nel testo sono presenti le " iniziali e le " finali. (da tenere presente in un eventuale comparazione di stringhe)
-  oldestMessage messaggioRicevuto = bot.getOldestMessage();
+  //uso il metodo getOldestMessage e salvo nella struttura messaggioRicevuto i dati ricevuti
+  messaggioRicevuto = bot.getOldestMessage();
 
   //Converto la stringa con il valore dell'id del mittente in un valore numerico
   unsigned long senderID = (messaggioRicevuto.sender_id).toInt();
