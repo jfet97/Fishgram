@@ -96,11 +96,11 @@ void resetSetESP()
 
 
 //-------------------------------------------------------------------------------------------------------------------------
-//Every 10 minutes I reset the ESP module (This ensures more stability)
+//Every tot minutes I reset the ESP module (This ensures more stability)
 
 unsigned long currentTime;
 unsigned long previousTime = 0;
-unsigned long interval = 600000;  //Change this value to change the time interval between two reset (ms)
+unsigned long interval = 3600000;  //Change this value to change the time interval between two reset (ms)
 
 void timeEsp ()
 {
@@ -144,20 +144,21 @@ void setup()
 //-------------------------------------------------------------------------------------------------------------------------
 //Void loop
 
+// Create a oldestMessage structure to save data returned by getOldestMessage method:
+// isEmpty is a boolean variable that is true if the json message was an empty or wrong string, false otherwise
+// sender_id is a string with sender's id
+// chat_id is a string with chat's id
+// text is a string containing the received text. WARNING! In the text there are "". (To consider for a strings comparison)
+oldestMessage receivedMessage;
+
 void loop()
 {
-  //Following delay is used to avoid frequent requests to Telegram
-  delay(2000);
 
   //If it's been ten minutes after the last reset, reset again ESP module .
   timeEsp();
 
-  // Create a oldestMessage structure to save data returned by getOldestMessage method:
-  // isEmpty is a boolean variable that is true if the json message was an empty or wrong string, false otherwise
-  // sender_id is a string with sender's id
-  // chat_id is a string with chat's id
-  // text is a string containing the received text. WARNING! In the text there are "". (To consider for a strings comparison)
-  oldestMessage receivedMessage  = bot.getOldestMessage();
+  //Use the getOldestMessage method and save the received data in receivedMessage 
+  receivedMessage = bot.getOldestMessage();
 
   //store sender's id in a unsigned long variable
   unsigned long senderID = (messaggioRicevuto.sender_id).toInt();
