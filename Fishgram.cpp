@@ -80,6 +80,17 @@ void parserCallback(uint8_t filter, uint8_t level, const char *name, const char 
   }
 }
 
+void Fishgram::reset()
+{
+  //if client is connected I'll disconnect it
+  if (client->connected())
+  {
+    client->stop();
+  }
+  //avoids too frequent connections to Telegram
+  delay(2000);
+}
+
 //this public void is used to get a message from Telegram and returns a oldestMessage structure
 oldestMessage  Fishgram::getOldestMessage()
 {
@@ -97,16 +108,20 @@ oldestMessage  Fishgram::getOldestMessage()
   //Start with a wrong JSON message. 
   //If it will be right, parserCallback will change it in true.
   checkJson = false;
-   
+  
+  reset();
   start();
 
   //Request to Telegram
-  String getRequest = "GET /bot" + String(accessToken) + "/getUpdates?offset=" + String(offset) + "&timeout=8&limit=1&allowed_updates=messages HTTP/1.1";
-  client->println(getRequest);
-  client->println("User-Agent: curl/7.37.1");
-  client->println("Host: api.telegram.org");
-  client->println();
-
+    client->print(F("GET /bot"));
+    client->print(String(accessToken));
+    client->print(F("/getUpdates?offset="));
+    client->print(String(offset));
+    client->println(F("&timeout=4&limit=1&allowed_updates=messages HTTP/1.1"));
+    client->println(F("User-Agent: curl/7.37.1"));
+    client->println(F("Host: api.telegram.org"));
+    client->println();
+  
   //Waiting answer (long polling)
   unsigned long tim = millis() + 12000;
   while ((!client->available()) && (millis() < tim))
@@ -145,6 +160,34 @@ oldestMessage  Fishgram::getOldestMessage()
   }
 }
 
+//private void to create a json message containing an answer
+void Fishgram::jsonAnswer()
+{
+  String  jsonMess = "{\"chat_id\":\"" + receiver_id + "\",\"text\":\"" + answerMessage + "\"}";
+  client->print(F("POST /bot"));
+  client->print(String(accessToken));
+  client->println(F("/sendMessage HTTP/1.1"));
+  client->println(F("Host: api.telegram.org"));
+  client->println(F("Content-Type: application/json"));
+  client->print(F("Content-Length: "));
+  client->println(jsonMess.length());
+  client->println();
+  client->println(jsonMess);
+  
+  unsigned long tim = millis() + 5000;
+  while ((!client->available()) && (millis() < tim))
+  {
+    ;
+  }
+  while (client->available())
+  {
+    char kkk = client->read();
+  }
+  
+  this->receiver_id = "\0";
+  this->answerMessage = "\0";
+  jsonMess = "\0";
+}
 
 void Fishgram::sendMessage(const char* answerMessage, String receiver_id)
 {
@@ -153,21 +196,7 @@ void Fishgram::sendMessage(const char* answerMessage, String receiver_id)
   this->answerMessage  = answerMessage;
   this->receiver_id = receiver_id;
 
-  String  jsonMess = "{\"chat_id\":\"" + receiver_id + "\",\"text\":\"" + answerMessage + "\"}";
-  client->print("POST /bot");
-  client->print(String(accessToken));
-  client->println("/sendMessage HTTP/1.1");
-  client->println("Host: api.telegram.org");
-  client->println("Content-Type: application/json");
-  client->print("Content-Length: ");
-  client->println(jsonMess.length());
-  client->println();
-  client->println(jsonMess);
-
-  while (client->available())
-  {
-    char kkk = client->read();
-  }
+  jsonAnswer();
   
   client->stop();
 }
@@ -180,21 +209,7 @@ void Fishgram::sendMessage(String &answerMessage, String receiver_id)
   this->answerMessage  = answerMessage;
   this->receiver_id = receiver_id;
 
-  String  jsonMess = "{\"chat_id\":\"" + receiver_id + "\",\"text\":\"" + answerMessage + "\"}";
-  client->print("POST /bot");
-  client->print(String(accessToken));
-  client->println("/sendMessage HTTP/1.1");
-  client->println("Host: api.telegram.org");
-  client->println("Content-Type: application/json");
-  client->print("Content-Length: ");
-  client->println(jsonMess.length());
-  client->println();
-  client->println(jsonMess);
-  this->answerMessage = "\0";
+  jsonAnswer();
 
-  while (client->available())
-  {
-    char kkk = client->read();
-  }
   client->stop();
 }
