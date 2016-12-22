@@ -10,7 +10,7 @@
 #include "Fishino.h"                                          
 #include "JSONStreamingParser.h"
 #include "String.h"
-
+#include "Flash.h"
 #define HOST "api.telegram.org"
 #define SSL_PORT 443
 
@@ -32,6 +32,8 @@ class Fishgram
    void closeConnection();
   private:
    void start();
+   void reset();
+   void jsonAnswer();
    FishinoSecureClient *client;
    String accessToken;
    String receiver_id;
