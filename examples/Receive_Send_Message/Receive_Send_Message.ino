@@ -144,19 +144,19 @@ void setup()
 //-------------------------------------------------------------------------------------------------------------------------
 //Void loop
 
-// Create a oldestMessage structure to save data returned by getOldestMessage method:
-// isEmpty is a boolean variable that is true if the json message was an empty or wrong string, false otherwise
-// sender_id is a string with sender's id
-// chat_id is a string with chat's id
-// text is a string containing the received text. WARNING! In the text there are "". (To consider for a strings comparison)
-oldestMessage receivedMessage;
-
 void loop()
 {
 
   //If it's been ten minutes after the last reset, reset again ESP module .
   timeEsp();
 
+  // Create a oldestMessage structure to save data returned by getOldestMessage method:
+  // isEmpty is a boolean variable that is true if the json message was an empty or wrong string, false otherwise
+  // sender_id is a string with sender's id
+  // chat_id is a string with chat's id
+  // text is a string containing the received text. WARNING! In the text there are "". (To consider for a strings comparison)
+  oldestMessage receivedMessage;
+   
   //Use the getOldestMessage method and save the received data in receivedMessage 
   receivedMessage = bot.getOldestMessage();
 
