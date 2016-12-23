@@ -152,19 +152,19 @@ void setup()
 //-------------------------------------------------------------------------------------------------------------------------
 //Void loop
 
-//Creo una struttura oldestMessage per salvarci i dati che ricevo tramite il metodo getOldestMessage:
-//isEmpty è una variabile bool che è true se il messaggio json era una stringa vuota o non valida, altrimenti è false
-//sender_id è una stringa con l'id del mittente del messaggio
-//chat_id è una stringa con l'id della chat dalla quale è partito il messaggio verso il bot.
-//text è una stringa contenente il testo ricevuto. ATTENZIONE! Nel testo sono presenti le " iniziali e le " finali. (da tenere presente in un eventuale comparazione di stringhe)
-oldestMessage messaggioRicevuto;
-
 void loop()
 {
    
   //controllo se sono passati tot minuti dall'ultimo riavvio dell'ESP
   timeEsp();
-
+   
+  //Creo una struttura oldestMessage per salvarci i dati che ricevo tramite il metodo getOldestMessage:
+  //isEmpty è una variabile bool che è true se il messaggio json era una stringa vuota o non valida, altrimenti è false
+  //sender_id è una stringa con l'id del mittente del messaggio
+  //chat_id è una stringa con l'id della chat dalla quale è partito il messaggio verso il bot.
+  //text è una stringa contenente il testo ricevuto. ATTENZIONE! Nel testo sono presenti le " iniziali e le " finali. (da tenere presente in un eventuale comparazione di stringhe)
+  oldestMessage messaggioRicevuto;
+  
   //uso il metodo getOldestMessage e salvo nella struttura messaggioRicevuto i dati ricevuti
   messaggioRicevuto = bot.getOldestMessage();
 
